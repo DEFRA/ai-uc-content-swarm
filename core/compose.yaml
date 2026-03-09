@@ -1,0 +1,57 @@
+include:
+  - ./service-compose/ai-uc-content-swarm-ui.yaml
+  - ./service-compose/ai-uc-content-swarm-runtime.yaml
+  - ./service-compose/cdp-uploader.yaml
+services:
+  localstack:
+    image: localstack/localstack:3.0.2
+    ports:
+      - 4566:4566
+      - 4510-4559:4510-4559
+    environment:
+      DEBUG: ${DEBUG:-1}
+      LS_LOG: WARN
+      SERVICES: s3,sqs,sns,firehose
+      LOCALSTACK_HOST: 127.0.0.1
+      AWS_REGION: eu-west-2
+      AWS_DEFAULT_REGION: eu-west-2
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
+    volumes:
+      - ${TMPDIR:-/tmp}/localstack:/var/lib/localstack
+      - ./localstack/cdp-uploader.sh:/etc/localstack/init/ready.d/cdp-uploader.sh
+      - ../ai-uc-content-swarm-runtime/compose/start-localstack.sh:/etc/localstack/init/ready.d/runtime-start-localstack.sh
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - localhost:4566
+      interval: 5s
+      start_period: 5s
+      retries: 3
+    networks:
+      - ai-uc-content-swarm
+      - cdpuploader
+  mongodb:
+    image: mongo:6.0.13
+    networks:
+      - ai-uc-content-swarm
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb-data:/data
+  redis:
+    image: redis:7.2.3-alpine3.18
+    ports:
+      - 6379:6379
+    networks:
+      - ai-uc-content-swarm
+      - cdpuploader
+volumes:
+  mongodb-data:
+networks:
+  ai-uc-content-swarm:
+    name: ai-uc-content-swarm
+    driver: bridge
+  cdpuploader:
+    driver: bridge

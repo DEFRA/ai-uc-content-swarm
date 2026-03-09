@@ -1,0 +1,29 @@
+services:
+  ai-uc-content-swarm-runtime:
+    build:
+      context: ../../ai-uc-content-swarm-runtime
+      target: development
+    ports:
+      - 8085:8085
+    links:
+      - "mongodb:mongodb"
+    depends_on:
+      mongodb:
+        condition: service_started
+    env_file:
+      - "../.env"
+    environment:
+      PORT: ${PORT:-8085}
+      MONGO_URI: ${MONGO_URI:-mongodb://mongodb:27017/}
+      HOST: ${HOST:-0.0.0.0}
+      HOST_URL: ${HOST_URL:-http://host.docker.internal:8085}
+      LOCALSTACK_URL: ${LOCALSTACK_URL:-http://localstack:4566}
+    volumes:
+      - ../../ai-uc-content-swarm-runtime/app:/home/nonroot/app
+    develop:
+      watch:
+        - action: rebuild
+          path: ../../ai-uc-content-swarm-runtime/pyproject.toml
+          target: /home/nonroot/pyproject.toml
+    networks:
+      - ai-uc-content-swarm
