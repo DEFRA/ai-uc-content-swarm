@@ -1,7 +1,7 @@
 include:
   - ./service-compose/ai-uc-content-swarm-ui.yaml
   - ./service-compose/ai-uc-content-swarm-runtime.yaml
-  - ./service-compose/cdp-uploader.yaml
+  - ./dependencies/cdp-uploader.yaml
 services:
   localstack:
     image: localstack/localstack:3.0.2

@@ -1,7 +1,7 @@
 services:
   ai-uc-content-swarm-runtime:
     build:
-      context: ../../ai-uc-content-swarm-runtime
+      context: ../repos/ai-uc-content-swarm-runtime
       target: development
     ports:
       - 8085:8085
@@ -19,11 +19,11 @@ services:
       HOST_URL: ${HOST_URL:-http://host.docker.internal:8085}
       LOCALSTACK_URL: ${LOCALSTACK_URL:-http://localstack:4566}
     volumes:
-      - ../../ai-uc-content-swarm-runtime/app:/home/nonroot/app
+      - ../repos/ai-uc-content-swarm-runtime/app:/home/nonroot/app
     develop:
       watch:
         - action: rebuild
-          path: ../../ai-uc-content-swarm-runtime/pyproject.toml
+          path: ../repos/ai-uc-content-swarm-runtime/pyproject.toml
           target: /home/nonroot/pyproject.toml
     networks:
       - ai-uc-content-swarm
