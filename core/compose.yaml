@@ -20,7 +20,7 @@ services:
     volumes:
       - ${TMPDIR:-/tmp}/localstack:/var/lib/localstack
       - ./localstack/cdp-uploader.sh:/etc/localstack/init/ready.d/cdp-uploader.sh
-      - ../ai-uc-content-swarm-runtime/compose/start-localstack.sh:/etc/localstack/init/ready.d/runtime-start-localstack.sh
+      - ./repos/ai-uc-content-swarm-runtime/compose/start-localstack.sh:/etc/localstack/init/ready.d/runtime-start-localstack.sh
     healthcheck:
       test:
         - CMD
