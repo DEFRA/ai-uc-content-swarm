@@ -4,7 +4,7 @@ include:
   - ./dependencies/cdp-uploader.yaml
 services:
   localstack:
-    image: localstack/localstack:3.0.2
+    image: localstack/localstack:4.9.2
     ports:
       - 4566:4566
       - 4510-4559:4510-4559
