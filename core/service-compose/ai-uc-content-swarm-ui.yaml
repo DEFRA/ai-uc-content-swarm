@@ -6,8 +6,11 @@ services:
     ports:
       - '3000:3000'
     links:
+      - "localstack:localstack"
       - 'redis:redis'
     depends_on:
+      localstack:
+        condition: service_healthy
       redis:
         condition: service_started
     env_file:

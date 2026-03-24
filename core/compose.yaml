@@ -19,16 +19,18 @@ services:
       AWS_SECRET_ACCESS_KEY: test
     volumes:
       - ${TMPDIR:-/tmp}/localstack:/var/lib/localstack
-      - ./localstack/cdp-uploader.sh:/etc/localstack/init/ready.d/cdp-uploader.sh
-      - ./repos/ai-uc-content-swarm-runtime/compose/start-localstack.sh:/etc/localstack/init/ready.d/runtime-start-localstack.sh
+      - ./localstack/cdp-uploader.sh:/etc/localstack/init/ready.d/01-cdp-uploader.sh
+      - ./repos/ai-uc-content-swarm-runtime/compose/start-localstack.sh:/etc/localstack/init/ready.d/02-runtime-start-localstack.sh
+      - ./localstack/99-ready.sh:/etc/localstack/init/ready.d/99-ready.sh
     healthcheck:
       test:
         - CMD
-        - curl
-        - localhost:4566
+        - bash
+        - -c
+        - "curl -s localhost:4566 && cat /tmp/READY"
       interval: 5s
-      start_period: 5s
-      retries: 3
+      start_period: 30s
+      retries: 15
     networks:
       - ai-uc-content-swarm
       - cdpuploader
