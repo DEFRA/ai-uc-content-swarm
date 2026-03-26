@@ -1,6 +1,6 @@
-# AI UC Content Swarm Core
+# Getting Started: Local Development & Deployment
 
-This directory contains the scripts and Docker Compose projects for running the AICE Agentic Swarm reference implementation locally.
+This guide covers how to set up and run the reference implementation locally.
 
 ## Prerequisites
 
