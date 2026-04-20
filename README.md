@@ -2,6 +2,11 @@
 
 This page outlines the use case we have built our agentic swarm around, as well as the architectural approach we've taken. If you're ready to run the reference implementation, see the [Getting Started guide](./reference/README.md).
 
+> [!IMPORTANT]
+> This is a reference implementation used as an example of an agentic swarm. However, when running this system in **local development or lower environments**, you **must only use publicly available and/or mocked data sources**. Do not use sensitive, proprietary, or production data in non-production deployments.
+>
+> For local setup instructions, see [docs/local-development.md](docs/local-development.md).
+
 ## Who this document is for?
 - Technical stakeholders interested in how agentic swarms can be designed and orchestrated to solve complex tasks
 - Developers looking to understand the architectural decisions and design patterns used in the reference implementation
