@@ -22,7 +22,7 @@ services:
       AWS_SECRET_ACCESS_KEY: test
       AWS_DEFAULT_REGION: eu-west-2
     networks:
-      - node-aws-challenge
+      - content-swarm-network
   mongodb:
     image: mongo:6.0.13
     ports:
@@ -30,15 +30,15 @@ services:
     volumes:
       - mongodb-data:/data
     networks:
-      - node-aws-challenge
+      - content-swarm-network
   redis:
     image: redis:7.2.3-alpine3.18
     ports:
       - 6379:6379
     networks:
-      - node-aws-challenge
+      - content-swarm-network
 volumes:
   mongodb-data:
 networks:
-  node-aws-challenge:
+  content-swarm-network:
     driver: bridge
