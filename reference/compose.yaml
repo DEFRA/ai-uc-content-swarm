@@ -1,59 +1,44 @@
-include:
-  - ./service-compose/ai-uc-content-swarm-ui.yaml
-  - ./service-compose/ai-uc-content-swarm-runtime.yaml
-  - ./dependencies/cdp-uploader.yaml
 services:
-  localstack:
-    image: localstack/localstack:4.9.2
+  moto:
+    build:
+      context: ./moto
+      dockerfile: Dockerfile
     ports:
-      - 4566:4566
-      - 4510-4559:4510-4559
-    environment:
-      DEBUG: ${DEBUG:-1}
-      LS_LOG: WARN
-      SERVICES: s3,sqs,sns,firehose
-      LOCALSTACK_HOST: 127.0.0.1
-      AWS_REGION: eu-west-2
-      AWS_DEFAULT_REGION: eu-west-2
-      AWS_ACCESS_KEY_ID: test
-      AWS_SECRET_ACCESS_KEY: test
+      - '5000:5000'
     volumes:
-      - ${TMPDIR:-/tmp}/localstack:/var/lib/localstack
-      - ./localstack/cdp-uploader.sh:/etc/localstack/init/ready.d/01-cdp-uploader.sh
-      - ./repos/ai-uc-content-swarm-runtime/compose/start-localstack.sh:/etc/localstack/init/ready.d/02-runtime-start-localstack.sh
-      - ./localstack/99-ready.sh:/etc/localstack/init/ready.d/99-ready.sh
+      - './moto/startup.sh:/etc/moto/init/ready.d/startup.sh'
     healthcheck:
       test:
         - CMD
         - bash
         - -c
-        - "curl -s localhost:4566 && cat /tmp/READY"
+        - "curl -sf http://localhost:5000/moto-api/data.json || exit 1"
       interval: 5s
-      start_period: 30s
-      retries: 15
+      timeout: 5s
+      start_period: 10s
+      retries: 5
+    environment:
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
+      AWS_DEFAULT_REGION: eu-west-2
     networks:
-      - ai-uc-content-swarm
-      - cdpuploader
+      - node-aws-challenge
   mongodb:
     image: mongo:6.0.13
-    networks:
-      - ai-uc-content-swarm
     ports:
       - 27017:27017
     volumes:
       - mongodb-data:/data
+    networks:
+      - node-aws-challenge
   redis:
     image: redis:7.2.3-alpine3.18
     ports:
       - 6379:6379
     networks:
-      - ai-uc-content-swarm
-      - cdpuploader
+      - node-aws-challenge
 volumes:
   mongodb-data:
 networks:
-  ai-uc-content-swarm:
-    name: ai-uc-content-swarm
-    driver: bridge
-  cdpuploader:
+  node-aws-challenge:
     driver: bridge
