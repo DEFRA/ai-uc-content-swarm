@@ -17,10 +17,10 @@ services:
     ports:
       - '7337:7337'
     links:
-      - 'localstack:localstack'
+      - 'moto:moto'
       - 'redis:redis'
     depends_on:
-      localstack:
+      moto:
         condition: service_healthy
     environment:
       AWS_REGION: eu-west-2
@@ -36,7 +36,7 @@ services:
       USE_SINGLE_INSTANCE_CACHE: true
       MOCK_VIRUS_SCAN_ENABLED: true
       MOCK_VIRUS_RESULT_DELAY: 3
-      SQS_ENDPOINT: http://localstack:4566
-      S3_ENDPOINT: http://localstack:4566
+      SQS_ENDPOINT: http://localhost:5000
+      S3_ENDPOINT: http://localhost:5000
     networks:
       - cdpuploader
